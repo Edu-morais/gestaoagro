@@ -53,7 +53,7 @@ const App: React.FC = () => {
 
   const navigation = [
     { id: 'dashboard', name: 'Dashboard', icon: LayoutDashboard },
-    { id: 'animals', name: 'Animais', icon: Beef },
+    { id: 'animals', name: 'Rebanho', icon: Beef },
     { id: 'sold_animals', name: 'Vendas/Abates', icon: History },
     { id: 'costs', name: 'Despesas', icon: DollarSign },
     { id: 'inventory', name: 'Estoque', icon: Package },
@@ -65,8 +65,11 @@ const App: React.FC = () => {
       {/* Mobile Header */}
       <div className="md:hidden flex items-center justify-between p-4 bg-emerald-800 text-white shadow-md">
         <div className="flex items-center gap-2">
-          <Beef className="w-8 h-8" />
-          <span className="font-bold text-xl tracking-tight">BovinoFinance</span>
+          {/* <Beef className="w-8 h-8" /> Replaced by Logo Image if desired, or keep icon */}
+          <div className="p-1 bg-white rounded-full">
+            <img src="/icon.png" alt="Logo" className="w-8 h-8 object-contain" />
+          </div>
+          <span className="font-bold text-xl tracking-tight">AgroSistem</span>
         </div>
         <button onClick={toggleSidebar} className="p-2">
           {isSidebarOpen ? <X /> : <Menu />}
@@ -79,9 +82,11 @@ const App: React.FC = () => {
         md:translate-x-0 md:static md:inset-auto
         ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'}
       `}>
-        <div className="flex items-center gap-2 p-6 mb-4">
-          <Beef className="w-10 h-10 text-emerald-400" />
-          <span className="font-bold text-2xl tracking-tight">BovinoFinance</span>
+        <div className="flex items-center gap-3 p-6 mb-4">
+          <div className="p-1 bg-white rounded-full shadow-lg">
+            <img src="/icon.png" alt="Logo" className="w-10 h-10 object-contain" />
+          </div>
+          <span className="font-bold text-2xl tracking-tight">AgroSistem</span>
         </div>
 
         <nav className="px-4 space-y-2">

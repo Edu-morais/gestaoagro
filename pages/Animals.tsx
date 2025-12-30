@@ -15,7 +15,7 @@ const Animals: React.FC<AnimalsProps> = ({ data, setData }) => {
   const [isSaleModalOpen, setIsSaleModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [animalToDelete, setAnimalToDelete] = useState<Animal | null>(null);
-  
+
   const [newAnimal, setNewAnimal] = useState<Partial<Animal>>({
     tag: '',
     birthDate: new Date().toISOString().split('T')[0],
@@ -44,10 +44,10 @@ const Animals: React.FC<AnimalsProps> = ({ data, setData }) => {
 
   const handleAddAnimal = (e: React.FormEvent) => {
     e.preventDefault();
-    const animalToAdd: Animal = { 
-      ...newAnimal, 
+    const animalToAdd: Animal = {
+      ...newAnimal,
       id: Math.random().toString(36).substr(2, 9),
-      weightAtEntry: Number(newAnimal.weightAtEntry) || 0 
+      weightAtEntry: Number(newAnimal.weightAtEntry) || 0
     } as Animal;
     setData({ ...data, animals: [...data.animals, animalToAdd] });
     setIsModalOpen(false);
@@ -57,10 +57,10 @@ const Animals: React.FC<AnimalsProps> = ({ data, setData }) => {
   const handleRegisterSale = (e: React.FormEvent) => {
     e.preventDefault();
     if (!selectedAnimal) return;
-    const updatedAnimals = data.animals.map(a => a.id === selectedAnimal.id ? { 
-      ...a, 
-      status: 'SOLD' as const, 
-      salePrice: saleData.price, 
+    const updatedAnimals = data.animals.map(a => a.id === selectedAnimal.id ? {
+      ...a,
+      status: 'SOLD' as const,
+      salePrice: saleData.price,
       saleDate: saleData.date,
       weightAtExit: saleData.weight
     } : a);
@@ -81,8 +81,8 @@ const Animals: React.FC<AnimalsProps> = ({ data, setData }) => {
     if (selectedAnimal?.id === animalToDelete.id) setSelectedAnimal(null);
   };
 
-  const filteredAnimals = data.animals.filter(a => 
-    a.status === 'ACTIVE' && 
+  const filteredAnimals = data.animals.filter(a =>
+    a.status === 'ACTIVE' &&
     ((a.tag || "").toLowerCase().includes(searchTerm.toLowerCase()) || a.id.includes(searchTerm))
   );
 
@@ -90,7 +90,10 @@ const Animals: React.FC<AnimalsProps> = ({ data, setData }) => {
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <div>
-          <h2 className="text-2xl font-bold text-gray-900">Gestão de Animais</h2>
+          <h2 className="text-2xl font-bold text-gray-900 flex items-center gap-2">
+            <Beef className="text-emerald-600" size={28} />
+            Gestão de Rebanho
+          </h2>
           <p className="text-gray-500">Controle completo do plantel ativo.</p>
         </div>
         <button onClick={() => setIsModalOpen(true)} className="flex items-center gap-2 px-6 py-3 bg-emerald-600 text-white font-bold rounded-2xl shadow-lg hover:bg-emerald-700 transition-colors"><PlusCircle size={20} /> Novo Animal</button>
@@ -167,10 +170,10 @@ const Animals: React.FC<AnimalsProps> = ({ data, setData }) => {
             </div>
             <div className="p-8 overflow-y-auto space-y-8">
               <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                <DetailItem icon={<Calendar size={16}/>} label="Nascimento" value={new Date(selectedAnimal.birthDate).toLocaleDateString()} />
-                <DetailItem icon={<Layers size={16}/>} label="Categoria" value={selectedAnimal.category} />
-                <DetailItem icon={<Scale size={16}/>} label="Peso Entrada" value={`${selectedAnimal.weightAtEntry || 0} kg`} />
-                <DetailItem icon={<DollarSign size={16}/>} label="Investimento" value={`R$ ${selectedAnimal.purchasePrice.toLocaleString()}`} />
+                <DetailItem icon={<Calendar size={16} />} label="Nascimento" value={new Date(selectedAnimal.birthDate).toLocaleDateString()} />
+                <DetailItem icon={<Layers size={16} />} label="Categoria" value={selectedAnimal.category} />
+                <DetailItem icon={<Scale size={16} />} label="Peso Entrada" value={`${selectedAnimal.weightAtEntry || 0} kg`} />
+                <DetailItem icon={<DollarSign size={16} />} label="Investimento" value={`R$ ${selectedAnimal.purchasePrice.toLocaleString()}`} />
               </div>
 
               <div className="bg-gray-50 p-6 rounded-3xl border border-gray-100">
@@ -189,8 +192,8 @@ const Animals: React.FC<AnimalsProps> = ({ data, setData }) => {
               </div>
 
               <div className="flex gap-4">
-                <button onClick={() => setIsSaleModalOpen(true)} className="flex-1 py-4 bg-emerald-600 text-white font-bold rounded-2xl shadow-lg flex items-center justify-center gap-2"><ArrowUpRight size={20}/> Registrar Saída</button>
-                <button onClick={() => { setAnimalToDelete(selectedAnimal); setIsDeleteModalOpen(true); }} className="py-4 px-6 bg-red-50 text-red-600 font-bold rounded-2xl hover:bg-red-600 hover:text-white transition-colors"><Trash2 size={20}/></button>
+                <button onClick={() => setIsSaleModalOpen(true)} className="flex-1 py-4 bg-emerald-600 text-white font-bold rounded-2xl shadow-lg flex items-center justify-center gap-2"><ArrowUpRight size={20} /> Registrar Saída</button>
+                <button onClick={() => { setAnimalToDelete(selectedAnimal); setIsDeleteModalOpen(true); }} className="py-4 px-6 bg-red-50 text-red-600 font-bold rounded-2xl hover:bg-red-600 hover:text-white transition-colors"><Trash2 size={20} /></button>
               </div>
             </div>
           </div>
@@ -201,41 +204,41 @@ const Animals: React.FC<AnimalsProps> = ({ data, setData }) => {
       {isSaleModalOpen && selectedAnimal && (
         <div className="fixed inset-0 z-[70] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
           <div className="bg-white w-full max-w-lg rounded-3xl p-8 shadow-2xl animate-in zoom-in duration-200">
-             <h3 className="text-2xl font-bold mb-6 flex items-center gap-2 text-emerald-800"><ArrowUpRight size={28}/> Registrar Saída: {selectedAnimal.tag}</h3>
-             
-             <div className="bg-emerald-50 p-4 rounded-2xl mb-6 border border-emerald-100">
-               <div className="flex justify-between text-sm mb-1 text-emerald-700"><span>Custo de Aquisição:</span> <span className="font-bold">R$ {selectedAnimal.purchasePrice.toLocaleString()}</span></div>
-               <div className="flex justify-between text-sm text-emerald-700"><span>Custos de Manejo:</span> <span className="font-bold">R$ {data.costs.filter(c => c.animalId === selectedAnimal.id).reduce((a, b) => a + b.amount, 0).toLocaleString()}</span></div>
-               <div className="border-t border-emerald-200 mt-2 pt-2 flex justify-between font-black text-emerald-900 uppercase text-xs"><span>Total Investido:</span> <span>R$ {(selectedAnimal.purchasePrice + data.costs.filter(c => c.animalId === selectedAnimal.id).reduce((a, b) => a + b.amount, 0)).toLocaleString()}</span></div>
-             </div>
+            <h3 className="text-2xl font-bold mb-6 flex items-center gap-2 text-emerald-800"><ArrowUpRight size={28} /> Registrar Saída: {selectedAnimal.tag}</h3>
 
-             <form onSubmit={handleRegisterSale} className="space-y-6">
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-1">Valor Venda (R$)</label>
-                    <input type="number" required step="0.01" className="w-full px-4 py-4 bg-gray-50 border-none rounded-2xl text-xl font-black text-emerald-700" value={saleData.price || ''} onChange={e => setSaleData({...saleData, price: parseFloat(e.target.value) || 0})} />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-1">Peso Saída (kg)</label>
-                    <input type="number" required step="0.1" className="w-full px-4 py-4 bg-gray-50 border-none rounded-2xl text-xl font-black text-blue-700" value={saleData.weight || ''} onChange={e => setSaleData({...saleData, weight: parseFloat(e.target.value) || 0})} />
-                  </div>
-                </div>
+            <div className="bg-emerald-50 p-4 rounded-2xl mb-6 border border-emerald-100">
+              <div className="flex justify-between text-sm mb-1 text-emerald-700"><span>Custo de Aquisição:</span> <span className="font-bold">R$ {selectedAnimal.purchasePrice.toLocaleString()}</span></div>
+              <div className="flex justify-between text-sm text-emerald-700"><span>Custos de Manejo:</span> <span className="font-bold">R$ {data.costs.filter(c => c.animalId === selectedAnimal.id).reduce((a, b) => a + b.amount, 0).toLocaleString()}</span></div>
+              <div className="border-t border-emerald-200 mt-2 pt-2 flex justify-between font-black text-emerald-900 uppercase text-xs"><span>Total Investido:</span> <span>R$ {(selectedAnimal.purchasePrice + data.costs.filter(c => c.animalId === selectedAnimal.id).reduce((a, b) => a + b.amount, 0)).toLocaleString()}</span></div>
+            </div>
 
-                <div className="p-4 bg-gray-50 rounded-2xl flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    {saleData.price - (selectedAnimal.purchasePrice + data.costs.filter(c => c.animalId === selectedAnimal.id).reduce((a, b) => a + b.amount, 0)) >= 0 ? <TrendingUp className="text-emerald-600"/> : <TrendingDown className="text-red-600"/>}
-                    <span className="text-sm font-bold text-gray-600">Lucro Líquido:</span>
-                  </div>
-                  <span className={`text-lg font-black ${saleData.price - (selectedAnimal.purchasePrice + data.costs.filter(c => c.animalId === selectedAnimal.id).reduce((a, b) => a + b.amount, 0)) >= 0 ? 'text-emerald-600' : 'text-red-600'}`}>
-                    R$ {(saleData.price - (selectedAnimal.purchasePrice + data.costs.filter(c => c.animalId === selectedAnimal.id).reduce((a, b) => a + b.amount, 0))).toLocaleString()}
-                  </span>
+            <form onSubmit={handleRegisterSale} className="space-y-6">
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-1">Valor Venda (R$)</label>
+                  <input type="number" required step="0.01" className="w-full px-4 py-4 bg-gray-50 border-none rounded-2xl text-xl font-black text-emerald-700" value={saleData.price || ''} onChange={e => setSaleData({ ...saleData, price: parseFloat(e.target.value) || 0 })} />
                 </div>
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-1">Peso Saída (kg)</label>
+                  <input type="number" required step="0.1" className="w-full px-4 py-4 bg-gray-50 border-none rounded-2xl text-xl font-black text-blue-700" value={saleData.weight || ''} onChange={e => setSaleData({ ...saleData, weight: parseFloat(e.target.value) || 0 })} />
+                </div>
+              </div>
 
-                <div className="flex gap-4">
-                  <button type="button" onClick={() => setIsSaleModalOpen(false)} className="flex-1 py-4 bg-gray-100 text-gray-600 font-bold rounded-2xl">Voltar</button>
-                  <button type="submit" className="flex-1 py-4 bg-emerald-600 text-white font-bold rounded-2xl shadow-lg">Confirmar Saída</button>
+              <div className="p-4 bg-gray-50 rounded-2xl flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  {saleData.price - (selectedAnimal.purchasePrice + data.costs.filter(c => c.animalId === selectedAnimal.id).reduce((a, b) => a + b.amount, 0)) >= 0 ? <TrendingUp className="text-emerald-600" /> : <TrendingDown className="text-red-600" />}
+                  <span className="text-sm font-bold text-gray-600">Lucro Líquido:</span>
                 </div>
-             </form>
+                <span className={`text-lg font-black ${saleData.price - (selectedAnimal.purchasePrice + data.costs.filter(c => c.animalId === selectedAnimal.id).reduce((a, b) => a + b.amount, 0)) >= 0 ? 'text-emerald-600' : 'text-red-600'}`}>
+                  R$ {(saleData.price - (selectedAnimal.purchasePrice + data.costs.filter(c => c.animalId === selectedAnimal.id).reduce((a, b) => a + b.amount, 0))).toLocaleString()}
+                </span>
+              </div>
+
+              <div className="flex gap-4">
+                <button type="button" onClick={() => setIsSaleModalOpen(false)} className="flex-1 py-4 bg-gray-100 text-gray-600 font-bold rounded-2xl">Voltar</button>
+                <button type="submit" className="flex-1 py-4 bg-emerald-600 text-white font-bold rounded-2xl shadow-lg">Confirmar Saída</button>
+              </div>
+            </form>
           </div>
         </div>
       )}
@@ -247,9 +250,9 @@ const Animals: React.FC<AnimalsProps> = ({ data, setData }) => {
             <h3 className="text-2xl font-bold mb-6">Novo Animal</h3>
             <form onSubmit={handleAddAnimal} className="space-y-4">
               <div className="grid grid-cols-2 gap-4">
-                <div><label className="text-xs font-bold text-gray-400 uppercase">Brinco</label><input className="w-full p-3 bg-gray-50 rounded-xl" placeholder="B-204" value={newAnimal.tag} onChange={e => setNewAnimal({...newAnimal, tag: e.target.value})}/></div>
+                <div><label className="text-xs font-bold text-gray-400 uppercase">Brinco</label><input className="w-full p-3 bg-gray-50 rounded-xl" placeholder="B-204" value={newAnimal.tag} onChange={e => setNewAnimal({ ...newAnimal, tag: e.target.value })} /></div>
                 <div><label className="text-xs font-bold text-gray-400 uppercase">Categoria</label>
-                  <select className="w-full p-3 bg-gray-50 rounded-xl font-bold" value={newAnimal.category} onChange={e => setNewAnimal({...newAnimal, category: e.target.value as Category})}>
+                  <select className="w-full p-3 bg-gray-50 rounded-xl font-bold" value={newAnimal.category} onChange={e => setNewAnimal({ ...newAnimal, category: e.target.value as Category })}>
                     <option value={Category.CRIA}>Bezerro (Cria)</option>
                     <option value={Category.RECRIA}>Boi (Recria)</option>
                     <option value={Category.ENGORDA}>Boi (Engorda)</option>
@@ -259,20 +262,20 @@ const Animals: React.FC<AnimalsProps> = ({ data, setData }) => {
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <label className="text-xs font-bold text-gray-400 uppercase">Preço Aquisição (R$)</label>
-                  <input type="number" step="0.01" className="w-full p-4 bg-emerald-50 rounded-xl font-black text-emerald-700" value={newAnimal.purchasePrice || ''} placeholder="0,00" onChange={e => setNewAnimal({...newAnimal, purchasePrice: parseFloat(e.target.value) || 0})}/>
+                  <input type="number" step="0.01" className="w-full p-4 bg-emerald-50 rounded-xl font-black text-emerald-700" value={newAnimal.purchasePrice || ''} placeholder="0,00" onChange={e => setNewAnimal({ ...newAnimal, purchasePrice: parseFloat(e.target.value) || 0 })} />
                 </div>
                 <div>
                   <label className="text-xs font-bold text-gray-400 uppercase">Peso Inicial (kg)</label>
-                  <input type="number" step="0.1" className="w-full p-4 bg-blue-50 rounded-xl font-black text-blue-700" value={newAnimal.weightAtEntry || ''} placeholder="0,0" onChange={e => setNewAnimal({...newAnimal, weightAtEntry: parseFloat(e.target.value) || 0})}/>
+                  <input type="number" step="0.1" className="w-full p-4 bg-blue-50 rounded-xl font-black text-blue-700" value={newAnimal.weightAtEntry || ''} placeholder="0,0" onChange={e => setNewAnimal({ ...newAnimal, weightAtEntry: parseFloat(e.target.value) || 0 })} />
                 </div>
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <div><label className="text-xs font-bold text-gray-400 uppercase">Lote</label>
-                  <select className="w-full p-3 bg-gray-50 rounded-xl" value={newAnimal.batchId} onChange={e => setNewAnimal({...newAnimal, batchId: e.target.value})}>
+                  <select className="w-full p-3 bg-gray-50 rounded-xl" value={newAnimal.batchId} onChange={e => setNewAnimal({ ...newAnimal, batchId: e.target.value })}>
                     {data.batches.map(b => <option key={b.id} value={b.id}>{b.name}</option>)}
                   </select>
                 </div>
-                <div><label className="text-xs font-bold text-gray-400 uppercase">Nascimento</label><input type="date" className="w-full p-3 bg-gray-50 rounded-xl" value={newAnimal.birthDate} onChange={e => setNewAnimal({...newAnimal, birthDate: e.target.value})}/></div>
+                <div><label className="text-xs font-bold text-gray-400 uppercase">Nascimento</label><input type="date" className="w-full p-3 bg-gray-50 rounded-xl" value={newAnimal.birthDate} onChange={e => setNewAnimal({ ...newAnimal, birthDate: e.target.value })} /></div>
               </div>
               <div className="flex gap-4 pt-4">
                 <button type="button" onClick={() => setIsModalOpen(false)} className="flex-1 py-4 bg-gray-100 rounded-2xl font-bold">Cancelar</button>
@@ -286,7 +289,7 @@ const Animals: React.FC<AnimalsProps> = ({ data, setData }) => {
   );
 };
 
-const DetailItem = ({ icon, label, value }: {icon: any, label: string, value: string}) => (
+const DetailItem = ({ icon, label, value }: { icon: any, label: string, value: string }) => (
   <div className="bg-gray-50 p-4 rounded-2xl border border-gray-100">
     <div className="flex items-center gap-1 text-gray-400 text-[10px] uppercase font-bold mb-1">{icon} {label}</div>
     <div className="text-sm font-black text-gray-900">{value}</div>

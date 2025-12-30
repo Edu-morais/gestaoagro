@@ -7,6 +7,7 @@ const InstallPwaModal: React.FC = () => {
 
     useEffect(() => {
         const handler = (e: Event) => {
+            console.log("PWA: beforeinstallprompt event fired!");
             // Prevent Chrome 67 and earlier from automatically showing the prompt
             e.preventDefault();
             // Stash the event so it can be triggered later.
@@ -16,9 +17,12 @@ const InstallPwaModal: React.FC = () => {
             const dismissed = localStorage.getItem('install_pwa_dismissed');
             if (!dismissed) {
                 setIsVisible(true);
+            } else {
+                console.log("PWA: Prompt dismissed by user preference");
             }
         };
 
+        console.log("PWA: Adding event listener");
         window.addEventListener('beforeinstallprompt', handler);
 
         return () => {
@@ -56,7 +60,7 @@ const InstallPwaModal: React.FC = () => {
                 <div className="flex-1">
                     <h3 className="font-semibold text-gray-900 mb-1">Instalar Aplicativo</h3>
                     <p className="text-sm text-gray-600 mb-3">
-                        Instale o BovinoFinance no seu computador para uma experiência tela cheia, sem barras de navegador.
+                        Instale o AgroSistem no seu computador para uma experiência tela cheia, sem barras de navegador.
                     </p>
                     <div className="flex gap-2">
                         <button

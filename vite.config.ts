@@ -15,10 +15,13 @@ export default defineConfig(({ mode }) => {
       react(),
       VitePWA({
         registerType: 'autoUpdate',
+        devOptions: {
+          enabled: true
+        },
         includeAssets: ['icon.png'],
         manifest: {
-          name: 'BovinoFinance',
-          short_name: 'BovinoFinance',
+          name: 'AgroSistem',
+          short_name: 'AgroSistem',
           description: 'Sistema de Gestão Financeira para Pecuária',
           theme_color: '#10b981',
           background_color: '#ffffff',
