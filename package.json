@@ -1,0 +1,57 @@
+{
+  "name": "bovinofinance---cattle-financial-management",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "main": "electron/main.cjs",
+  "homepage": "./",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "electron:dev": "concurrently \"vite --mode electron\" \"wait-on tcp:5173 && electron .\"",
+    "electron:build": "vite build --mode electron && electron-builder"
+  },
+  "dependencies": {
+    "recharts": "^3.6.0",
+    "@google/genai": "^1.34.0",
+    "lucide-react": "^0.562.0",
+    "react-dom": "^19.2.3",
+    "react": "^19.2.3"
+  },
+  "devDependencies": {
+    "@types/node": "^22.14.0",
+    "@vitejs/plugin-react": "^5.0.0",
+    "typescript": "~5.8.2",
+    "vite": "^6.2.0",
+    "concurrently": "^9.1.2",
+    "electron": "^33.2.1",
+    "electron-builder": "^25.1.8",
+    "wait-on": "^8.0.1"
+  },
+  "build": {
+    "appId": "com.bovinofinance.app",
+    "productName": "BovinoFinance",
+    "files": [
+      "dist/**/*",
+      "electron/**/*"
+    ],
+    "directories": {
+      "output": "release"
+    },
+    "win": {
+      "target": "nsis"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true
+    },
+    "linux": {
+      "target": "AppImage",
+      "category": "Office"
+    },
+    "mac": {
+      "target": "dmg"
+    }
+  }
+}
