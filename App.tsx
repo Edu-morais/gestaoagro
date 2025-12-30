@@ -1,7 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import {
-  LayoutDashboard,
-  Beef,
+LayoutDashboard,
+  Layers,
   History,
   DollarSign,
   Package,
