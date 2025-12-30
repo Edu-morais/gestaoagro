@@ -17,8 +17,8 @@ import Costs from './pages/Costs';
 import Inventory from './pages/Inventory';
 import Reports from './pages/Reports';
 import SoldAnimals from './pages/SoldAnimals';
-import DownloadModal from './components/DownloadModal';
-import UpdateModal from './components/UpdateModal';
+import DownloadModal from './src/components/DownloadModal';
+import UpdateModal from './src/components/UpdateModal';
 
 const App: React.FC = () => {
   const [data, setData] = useState<any>(null); // Initial null to wait for load
