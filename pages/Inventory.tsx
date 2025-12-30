@@ -1,11 +1,11 @@
 
 import React, { useState, useEffect, useMemo } from 'react';
 import { Package, PlusCircle, X, Edit3, Baby, Beef, Trash2, AlertCircle, TrendingUp, DollarSign as DollarIcon } from 'lucide-react';
-import { InventoryItem, Animal, Category, CostType, CostEntry } from '../types';
+import { InventoryItem, Animal, Category, CostType, CostEntry, AppState } from '../types';
 
 interface InventoryProps {
-  data: { inventory: InventoryItem[]; animals: Animal[]; costs: CostEntry[] };
-  setData: (data: any) => void;
+  data: AppState;
+  setData: React.Dispatch<React.SetStateAction<AppState>>;
 }
 
 const Inventory: React.FC<InventoryProps> = ({ data, setData }) => {
@@ -14,7 +14,7 @@ const Inventory: React.FC<InventoryProps> = ({ data, setData }) => {
   const [editingItem, setEditingItem] = useState<InventoryItem | null>(null);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [itemToDelete, setItemToDelete] = useState<InventoryItem | null>(null);
-  
+
   const [formData, setFormData] = useState<Partial<InventoryItem>>({
     name: '',
     type: 'FEED',
@@ -28,7 +28,7 @@ const Inventory: React.FC<InventoryProps> = ({ data, setData }) => {
   const [totalCostInput, setTotalCostInput] = useState<number>(0);
 
   useEffect(() => {
-    const handleEsc = (e: KeyboardEvent) => { 
+    const handleEsc = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
         setIsModalOpen(false);
         setEditingItem(null);
@@ -60,14 +60,14 @@ const Inventory: React.FC<InventoryProps> = ({ data, setData }) => {
   const handleSaveItem = (e: React.FormEvent) => {
     e.preventDefault();
     if (editingItem) {
-      const updatedInventory = data.inventory.map(item => 
+      const updatedInventory = data.inventory.map(item =>
         item.id === editingItem.id ? { ...formData, id: item.id, lastStockUpdate: new Date().toISOString() } as InventoryItem : item
       );
       setData({ ...data, inventory: updatedInventory });
     } else {
       const newId = Math.random().toString(36).substr(2, 9);
       const newItem: InventoryItem = { ...formData, id: newId, lastStockUpdate: new Date().toISOString() } as InventoryItem;
-      
+
       // Determina o tipo de despesa financeira: Medicamento -> MEDICINE, Alimento -> INPUT (Insumo)
       const costType = newItem.type === 'MEDICINE' ? CostType.MEDICINE : CostType.INPUT;
 
@@ -82,8 +82,8 @@ const Inventory: React.FC<InventoryProps> = ({ data, setData }) => {
         isRecurring: false // Insumos são sempre avulsos
       };
 
-      setData({ 
-        ...data, 
+      setData({
+        ...data,
         inventory: [...data.inventory, newItem],
         costs: [newCost, ...data.costs]
       });
@@ -100,17 +100,17 @@ const Inventory: React.FC<InventoryProps> = ({ data, setData }) => {
 
   const confirmDelete = () => {
     if (!itemToDelete) return;
-    
+
     // Atualiza inventário E despesas vinculadas
     const updatedInventory = data.inventory.filter(i => i.id !== itemToDelete.id);
     const updatedCosts = data.costs.filter(c => c.inventoryItemId !== itemToDelete.id);
-    
-    setData({ 
-      ...data, 
+
+    setData({
+      ...data,
       inventory: updatedInventory,
       costs: updatedCosts
     });
-    
+
     setIsDeleteModalOpen(false);
     setItemToDelete(null);
     setIsModalOpen(false);
@@ -119,10 +119,10 @@ const Inventory: React.FC<InventoryProps> = ({ data, setData }) => {
 
   const handleNumberInput = (value: string, field: 'quantity' | 'unitCost' | 'totalCost') => {
     const numValue = parseFloat(value) || 0;
-    
+
     setFormData(prev => {
       const updated = { ...prev };
-      
+
       if (field === 'quantity') {
         updated.quantity = numValue;
         setTotalCostInput(numValue * (prev.unitCost || 0));
@@ -137,7 +137,7 @@ const Inventory: React.FC<InventoryProps> = ({ data, setData }) => {
           updated.unitCost = 0;
         }
       }
-      
+
       return updated;
     });
   };
@@ -170,14 +170,14 @@ const Inventory: React.FC<InventoryProps> = ({ data, setData }) => {
                 <TrendingUp size={10} /> R$ {getPricePerKg(item).toFixed(2)}/kg
               </div>
             )}
-            
+
             <div className="flex justify-between mb-4">
               <div className="w-12 h-12 bg-blue-50 text-blue-600 rounded-2xl flex items-center justify-center group-hover:bg-blue-600 group-hover:text-white transition-colors"><Package size={24} /></div>
               <Edit3 size={16} className="text-gray-300" />
             </div>
-            
+
             <h3 className="font-bold text-lg text-gray-900 mb-2 truncate pr-16">{item.name}</h3>
-            
+
             <div className="flex flex-wrap gap-2 mb-4">
               <span className="text-[10px] font-bold bg-gray-100 px-2 py-1 rounded text-gray-500 uppercase">{item.unit}</span>
               {item.type === 'FEED' ? (
@@ -199,11 +199,11 @@ const Inventory: React.FC<InventoryProps> = ({ data, setData }) => {
                 {item.unit === 'g' && <p className="text-[10px] text-gray-400 font-medium">Equiv. R$ {(item.unitCost * 1000).toFixed(2)}/kg</p>}
               </div>
             </div>
-            
+
             {item.type === 'FEED' && (
               <div className="mt-4 pt-4 border-t border-gray-50 grid grid-cols-2 gap-2 text-[10px] font-bold text-gray-400">
-                <div className="flex items-center gap-1"><Baby size={12}/> Bezerro: {item.dailyIntakeCalf}{item.unit}/dia</div>
-                <div className="flex items-center gap-1"><Beef size={12}/> Adulto: {item.dailyIntakeAdult}{item.unit}/dia</div>
+                <div className="flex items-center gap-1"><Baby size={12} /> Bezerro: {item.dailyIntakeCalf}{item.unit}/dia</div>
+                <div className="flex items-center gap-1"><Beef size={12} /> Adulto: {item.dailyIntakeAdult}{item.unit}/dia</div>
               </div>
             )}
           </div>
@@ -233,19 +233,19 @@ const Inventory: React.FC<InventoryProps> = ({ data, setData }) => {
             <div className="flex justify-between items-center mb-6">
               <h3 className="text-2xl font-bold tracking-tight">{editingItem ? 'Editar Insumo' : 'Novo Insumo'}</h3>
               {editingItem && (
-                <button onClick={handleDeleteClick} className="p-3 bg-red-50 text-red-600 rounded-xl hover:bg-red-600 hover:text-white transition-all"><Trash2 size={20}/></button>
+                <button onClick={handleDeleteClick} className="p-3 bg-red-50 text-red-600 rounded-xl hover:bg-red-600 hover:text-white transition-all"><Trash2 size={20} /></button>
               )}
             </div>
             <form onSubmit={handleSaveItem} className="space-y-6">
               <div>
                 <label className="block text-xs font-black text-gray-400 uppercase tracking-widest mb-1">Nome do Produto</label>
-                <input required className="w-full px-4 py-3 bg-gray-50 border-none rounded-xl font-bold text-gray-900 focus:ring-2 focus:ring-blue-500" value={formData.name} onChange={e => setFormData({...formData, name: e.target.value})} />
+                <input required className="w-full px-4 py-3 bg-gray-50 border-none rounded-xl font-bold text-gray-900 focus:ring-2 focus:ring-blue-500" value={formData.name} onChange={e => setFormData({ ...formData, name: e.target.value })} />
               </div>
-              
+
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <label className="block text-xs font-black text-gray-400 uppercase tracking-widest mb-1">Tipo</label>
-                  <select className="w-full px-4 py-3 bg-gray-50 border-none rounded-xl font-bold" value={formData.type} onChange={e => setFormData({...formData, type: e.target.value as any})}>
+                  <select className="w-full px-4 py-3 bg-gray-50 border-none rounded-xl font-bold" value={formData.type} onChange={e => setFormData({ ...formData, type: e.target.value as any })}>
                     <option value="FEED">Ração / Alimento</option>
                     <option value="MEDICINE">Medicamento</option>
                     <option value="OTHER">Outros</option>
@@ -253,7 +253,7 @@ const Inventory: React.FC<InventoryProps> = ({ data, setData }) => {
                 </div>
                 <div>
                   <label className="block text-xs font-black text-gray-400 uppercase tracking-widest mb-1">Unidade</label>
-                  <select className="w-full px-4 py-3 bg-gray-50 border-none rounded-xl font-bold" value={formData.unit} onChange={e => setFormData({...formData, unit: e.target.value as any})}>
+                  <select className="w-full px-4 py-3 bg-gray-50 border-none rounded-xl font-bold" value={formData.unit} onChange={e => setFormData({ ...formData, unit: e.target.value as any })}>
                     <option value="kg">Quilograma (kg)</option>
                     <option value="g">Grama (g)</option>
                     <option value="un">Unidade (un)</option>
@@ -268,14 +268,14 @@ const Inventory: React.FC<InventoryProps> = ({ data, setData }) => {
                   <input type="number" step="0.01" className="w-full px-4 py-3 bg-gray-50 border-none rounded-xl font-black text-lg" value={formData.quantity || ''} onChange={e => handleNumberInput(e.target.value, 'quantity')} />
                 </div>
                 <div className="col-span-1">
-                  <label className="block text-xs font-black text-blue-500 uppercase tracking-widest mb-1 flex items-center gap-1"><DollarIcon size={10}/> Custo Total (R$)</label>
-                  <input 
-                    type="number" 
-                    step="0.01" 
+                  <label className="block text-xs font-black text-blue-500 uppercase tracking-widest mb-1 flex items-center gap-1"><DollarIcon size={10} /> Custo Total (R$)</label>
+                  <input
+                    type="number"
+                    step="0.01"
                     placeholder="Valor total pago"
-                    className="w-full px-4 py-3 bg-blue-50 border-none rounded-xl font-black text-lg text-blue-900 focus:ring-2 focus:ring-blue-600" 
-                    value={totalCostInput || ''} 
-                    onChange={e => handleNumberInput(e.target.value, 'totalCost')} 
+                    className="w-full px-4 py-3 bg-blue-50 border-none rounded-xl font-black text-lg text-blue-900 focus:ring-2 focus:ring-blue-600"
+                    value={totalCostInput || ''}
+                    onChange={e => handleNumberInput(e.target.value, 'totalCost')}
                   />
                 </div>
               </div>
@@ -299,20 +299,20 @@ const Inventory: React.FC<InventoryProps> = ({ data, setData }) => {
                       R$ {getPricePerKg(formData).toFixed(2)}/kg
                     </div>
                   </div>
-                  
+
                   <div className="grid grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-[10px] font-bold text-emerald-600 uppercase mb-1 flex items-center gap-1"><Baby size={10}/> Bezerros ({formData.unit}/dia)</label>
+                      <label className="block text-[10px] font-bold text-emerald-600 uppercase mb-1 flex items-center gap-1"><Baby size={10} /> Bezerros ({formData.unit}/dia)</label>
                       <input type="number" step="0.001" className="w-full px-4 py-2 bg-white border-none rounded-xl text-sm font-bold" value={formData.dailyIntakeCalf || ''} onChange={e => {
                         const val = parseFloat(e.target.value) || 0;
-                        setFormData({...formData, dailyIntakeCalf: val});
+                        setFormData({ ...formData, dailyIntakeCalf: val });
                       }} placeholder="0.000" />
                     </div>
                     <div>
-                      <label className="block text-[10px] font-bold text-emerald-600 uppercase mb-1 flex items-center gap-1"><Beef size={10}/> Adultos ({formData.unit}/dia)</label>
+                      <label className="block text-[10px] font-bold text-emerald-600 uppercase mb-1 flex items-center gap-1"><Beef size={10} /> Adultos ({formData.unit}/dia)</label>
                       <input type="number" step="0.001" className="w-full px-4 py-2 bg-white border-none rounded-xl text-sm font-bold" value={formData.dailyIntakeAdult || ''} onChange={e => {
                         const val = parseFloat(e.target.value) || 0;
-                        setFormData({...formData, dailyIntakeAdult: val});
+                        setFormData({ ...formData, dailyIntakeAdult: val });
                       }} placeholder="0.000" />
                     </div>
                   </div>

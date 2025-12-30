@@ -1,7 +1,7 @@
 
 import { Animal, Batch, CostEntry, Transaction, InventoryItem, Category, CostType, TransactionType } from './types';
 
-const STORAGE_KEY = 'bovinofinance_data';
+const STORAGE_KEY = 'agrosistem_data';
 
 interface AppData {
   animals: Animal[];
@@ -11,7 +11,7 @@ interface AppData {
   inventory: InventoryItem[];
 }
 
-const INITIAL_DATA: AppData = {
+export const INITIAL_DATA: AppData = {
   animals: [
     { id: '1', tag: 'B-001', birthDate: '2023-01-15', category: Category.ENGORDA, batchId: 'batch-1', origin: 'COMPRA', purchasePrice: 2500, status: 'ACTIVE' },
     { id: '2', tag: 'B-002', birthDate: '2023-02-10', category: Category.ENGORDA, batchId: 'batch-1', origin: 'COMPRA', purchasePrice: 2600, status: 'ACTIVE' },

@@ -1,11 +1,11 @@
 
 import React, { useState, useEffect, useMemo } from 'react';
 import { PlusCircle, Search, X, Trash2, Info, DollarSign, Calendar, Layers, Beef, ArrowUpRight, TrendingUp, TrendingDown, Scale, AlertCircle } from 'lucide-react';
-import { Animal, Batch, Category, CostEntry } from '../types';
+import { Animal, Batch, Category, CostEntry, AppState } from '../types';
 
 interface AnimalsProps {
-  data: { animals: Animal[]; batches: Batch[]; costs: CostEntry[] };
-  setData: (data: any) => void;
+  data: AppState;
+  setData: React.Dispatch<React.SetStateAction<AppState>>;
 }
 
 const Animals: React.FC<AnimalsProps> = ({ data, setData }) => {
@@ -90,8 +90,8 @@ const Animals: React.FC<AnimalsProps> = ({ data, setData }) => {
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <div>
-          <h2 className="text-2xl font-bold text-gray-900 flex items-center gap-2">
-            <Beef className="text-emerald-600" size={28} />
+          <h2 className="text-2xl font-bold text-gray-900 flex items-center gap-3">
+            <img src="/logo.png" alt="Icon" className="w-16 h-16 object-contain drop-shadow-sm" />
             Gestão de Rebanho
           </h2>
           <p className="text-gray-500">Controle completo do plantel ativo.</p>
@@ -289,7 +289,7 @@ const Animals: React.FC<AnimalsProps> = ({ data, setData }) => {
   );
 };
 
-const DetailItem = ({ icon, label, value }: { icon: any, label: string, value: string }) => (
+const DetailItem = ({ icon, label, value }: { icon: React.ReactNode, label: string, value: string | number }) => (
   <div className="bg-gray-50 p-4 rounded-2xl border border-gray-100">
     <div className="flex items-center gap-1 text-gray-400 text-[10px] uppercase font-bold mb-1">{icon} {label}</div>
     <div className="text-sm font-black text-gray-900">{value}</div>

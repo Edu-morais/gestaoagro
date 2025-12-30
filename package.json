@@ -1,5 +1,5 @@
 {
-  "name": "bovinofinance---cattle-financial-management",
+  "name": "agrosistem",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -23,6 +23,8 @@
   },
   "devDependencies": {
     "@types/node": "^22.19.3",
+    "@types/react": "^19.2.7",
+    "@types/react-dom": "^19.2.3",
     "@vitejs/plugin-react": "^5.0.0",
     "concurrently": "^9.1.2",
     "electron": "^33.2.1",
@@ -32,8 +34,8 @@
     "wait-on": "^8.0.1"
   },
   "build": {
-    "appId": "com.bovinofinance.app",
-    "productName": "BovinoFinance",
+    "appId": "com.agrosistem.app",
+    "productName": "AgroSistem",
     "files": [
       "dist/**/*",
       "electron/**/*"

@@ -40,6 +40,8 @@ function createWindow() {
   const win = new BrowserWindow({
     width: 1200,
     height: 800,
+    title: 'AgroSistem',
+    icon: path.join(__dirname, '../public/logo.png'),
     webPreferences: {
       nodeIntegration: false,
       contextIsolation: true

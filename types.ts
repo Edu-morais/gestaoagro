@@ -76,3 +76,11 @@ export interface Transaction {
   amount: number;
   description?: string;
 }
+
+export interface AppState {
+  animals: Animal[];
+  batches: Batch[];
+  costs: CostEntry[];
+  inventory: InventoryItem[];
+  transactions: Transaction[];
+}

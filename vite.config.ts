@@ -16,27 +16,50 @@ export default defineConfig(({ mode }) => {
       VitePWA({
         registerType: 'autoUpdate',
         devOptions: {
-          enabled: true
+          enabled: true,
+          type: 'module',
+          navigateFallback: 'index.html',
         },
-        includeAssets: ['icon.png'],
+        workbox: {
+          globPatterns: mode === 'development' ? [] : ['**/*.{js,css,html,png,svg,ico}'],
+          runtimeCaching: [
+            {
+              urlPattern: /^https:\/\/fonts\.googleapis\.com\/.*/i,
+              handler: 'CacheFirst',
+              options: {
+                cacheName: 'google-fonts-cache',
+                expiration: {
+                  maxEntries: 10,
+                  maxAgeSeconds: 60 * 60 * 24 * 365 // <== 365 days
+                },
+                cacheableResponse: {
+                  statuses: [0, 200]
+                }
+              }
+            }
+          ]
+        },
+        includeAssets: ['logo.png'],
         manifest: {
           name: 'AgroSistem',
           short_name: 'AgroSistem',
           description: 'Sistema de Gestão Financeira para Pecuária',
-          theme_color: '#10b981',
+          theme_color: '#065f46',
           background_color: '#ffffff',
           display: 'standalone',
           orientation: 'portrait',
           icons: [
             {
-              src: 'icon.png',
-              sizes: '192x192', // Using the same icon for now, ideally should have multiple sizes
-              type: 'image/png'
+              src: 'logo.png',
+              sizes: '192x192',
+              type: 'image/png',
+              purpose: 'any maskable'
             },
             {
-              src: 'icon.png',
+              src: 'logo.png',
               sizes: '512x512',
-              type: 'image/png'
+              type: 'image/png',
+              purpose: 'any maskable'
             }
           ]
         }

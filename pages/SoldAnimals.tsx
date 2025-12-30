@@ -1,28 +1,28 @@
 
 import React, { useMemo, useState, useEffect } from 'react';
 import { History, TrendingUp, TrendingDown, DollarSign, Calendar, Beef, ArrowUpRight, Scale, X, Layers, Info } from 'lucide-react';
-import { Animal, CostEntry } from '../types';
+import { Animal, CostEntry, AppState } from '../types';
 
 interface SoldAnimalsProps {
-  data: { animals: Animal[]; costs: CostEntry[] };
+  data: AppState;
 }
 
 const SoldAnimals: React.FC<SoldAnimalsProps> = ({ data }) => {
   const [selectedSoldAnimal, setSelectedSoldAnimal] = useState<Animal | null>(null);
 
   useEffect(() => {
-    const handleEsc = (e: KeyboardEvent) => { 
+    const handleEsc = (e: KeyboardEvent) => {
       if (e.key === 'Escape') setSelectedSoldAnimal(null);
     };
     window.addEventListener('keydown', handleEsc);
     return () => window.removeEventListener('keydown', handleEsc);
   }, []);
 
-  const soldAnimals = useMemo(() => 
-    data.animals.filter(a => a.status === 'SOLD').sort((a, b) => 
+  const soldAnimals = useMemo(() =>
+    data.animals.filter(a => a.status === 'SOLD').sort((a, b) =>
       new Date(b.saleDate || 0).getTime() - new Date(a.saleDate || 0).getTime()
-    ), 
-  [data.animals]);
+    ),
+    [data.animals]);
 
   const stats = useMemo(() => {
     let totalProfit = 0;
@@ -65,8 +65,8 @@ const SoldAnimals: React.FC<SoldAnimalsProps> = ({ data }) => {
           const roi = totalInvested > 0 ? (profit / totalInvested) * 100 : 0;
 
           return (
-            <div 
-              key={animal.id} 
+            <div
+              key={animal.id}
               onClick={() => setSelectedSoldAnimal(animal)}
               className="bg-white p-6 rounded-3xl border border-gray-100 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-6 cursor-pointer hover:border-emerald-500 transition-all group"
             >
@@ -76,7 +76,7 @@ const SoldAnimals: React.FC<SoldAnimalsProps> = ({ data }) => {
                 </div>
                 <div>
                   <h4 className="font-black text-gray-900 text-lg flex items-center gap-2">
-                    {animal.tag || "S/B"} 
+                    {animal.tag || "S/B"}
                     <span className="text-xs font-bold uppercase px-2 py-0.5 bg-gray-100 rounded-lg text-gray-500">{animal.category}</span>
                   </h4>
                   <p className="text-xs text-gray-400 flex items-center gap-1">
@@ -130,7 +130,7 @@ const SoldAnimals: React.FC<SoldAnimalsProps> = ({ data }) => {
               </div>
               <button onClick={() => setSelectedSoldAnimal(null)} className="p-2 hover:bg-emerald-800 rounded-full transition-colors"><X size={24} /></button>
             </div>
-            
+
             <div className="p-8 overflow-y-auto space-y-6">
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                 <SummaryBox label="Peso Entrada" value={`${selectedSoldAnimal.weightAtEntry || 0} kg`} color="bg-gray-50 text-gray-900" />
@@ -147,18 +147,18 @@ const SoldAnimals: React.FC<SoldAnimalsProps> = ({ data }) => {
                   <p className="text-lg font-black text-emerald-900 mt-2">Investimento: R$ {(selectedSoldAnimal.purchasePrice + data.costs.filter(c => c.animalId === selectedSoldAnimal.id).reduce((a, b) => a + b.amount, 0)).toLocaleString()}</p>
                 </div>
                 <div className="text-right flex flex-col justify-end">
-                   <p className="text-xs font-bold text-emerald-700 uppercase mb-1">Valor Venda</p>
-                   <p className="text-3xl font-black text-emerald-900">R$ {selectedSoldAnimal.salePrice?.toLocaleString()}</p>
-                   <p className={`text-sm font-bold mt-2 ${((selectedSoldAnimal.salePrice || 0) - (selectedSoldAnimal.purchasePrice + data.costs.filter(c => c.animalId === selectedSoldAnimal.id).reduce((a, b) => a + b.amount, 0))) >= 0 ? 'text-emerald-700' : 'text-red-600'}`}>
-                      Lucro: R$ {((selectedSoldAnimal.salePrice || 0) - (selectedSoldAnimal.purchasePrice + data.costs.filter(c => c.animalId === selectedSoldAnimal.id).reduce((a, b) => a + b.amount, 0))).toLocaleString()}
-                   </p>
+                  <p className="text-xs font-bold text-emerald-700 uppercase mb-1">Valor Venda</p>
+                  <p className="text-3xl font-black text-emerald-900">R$ {selectedSoldAnimal.salePrice?.toLocaleString()}</p>
+                  <p className={`text-sm font-bold mt-2 ${((selectedSoldAnimal.salePrice || 0) - (selectedSoldAnimal.purchasePrice + data.costs.filter(c => c.animalId === selectedSoldAnimal.id).reduce((a, b) => a + b.amount, 0))) >= 0 ? 'text-emerald-700' : 'text-red-600'}`}>
+                    Lucro: R$ {((selectedSoldAnimal.salePrice || 0) - (selectedSoldAnimal.purchasePrice + data.costs.filter(c => c.animalId === selectedSoldAnimal.id).reduce((a, b) => a + b.amount, 0))).toLocaleString()}
+                  </p>
                 </div>
               </div>
 
               <div>
-                <h4 className="font-bold text-gray-800 mb-4 flex items-center gap-2 border-b pb-2"><History size={18}/> Histórico de Custos Diretos</h4>
+                <h4 className="font-bold text-gray-800 mb-4 flex items-center gap-2 border-b pb-2"><History size={18} /> Histórico de Custos Diretos</h4>
                 <div className="space-y-2">
-                  {data.costs.filter(c => c.animalId === selectedSoldAnimal.id).length > 0 ? 
+                  {data.costs.filter(c => c.animalId === selectedSoldAnimal.id).length > 0 ?
                     data.costs.filter(c => c.animalId === selectedSoldAnimal.id).map(c => (
                       <div key={c.id} className="flex justify-between items-center p-4 bg-gray-50 rounded-2xl text-sm hover:bg-white border border-transparent hover:border-gray-100 transition-all">
                         <div>
@@ -168,8 +168,8 @@ const SoldAnimals: React.FC<SoldAnimalsProps> = ({ data }) => {
                         <span className="font-black text-red-600">R$ {c.amount.toLocaleString()}</span>
                       </div>
                     )) : (
-                    <p className="text-center text-gray-400 py-6 italic text-sm">Sem custos diretos registrados além da compra.</p>
-                  )}
+                      <p className="text-center text-gray-400 py-6 italic text-sm">Sem custos diretos registrados além da compra.</p>
+                    )}
                 </div>
               </div>
 
@@ -182,7 +182,7 @@ const SoldAnimals: React.FC<SoldAnimalsProps> = ({ data }) => {
   );
 };
 
-const SummaryBox = ({ label, value, color }: {label: string, value: string, color: string}) => (
+const SummaryBox = ({ label, value, color }: { label: string, value: string, color: string }) => (
   <div className={`${color} p-4 rounded-2xl text-center border border-black/5 shadow-sm`}>
     <p className="text-[10px] font-bold uppercase opacity-60 mb-1">{label}</p>
     <p className="text-sm font-black leading-none">{value}</p>

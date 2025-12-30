@@ -1,19 +1,16 @@
 
 import React, { useMemo } from 'react';
-import { 
-  TrendingDown, 
-  Users, 
-  DollarSign, 
+import {
+  TrendingDown,
+  Users,
+  DollarSign,
   Beef
 } from 'lucide-react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell } from 'recharts';
-import { Animal, CostEntry, CostType } from '../types';
+import { Animal, CostEntry, CostType, AppState } from '../types';
 
 interface DashboardProps {
-  data: {
-    animals: Animal[];
-    costs: CostEntry[];
-  };
+  data: AppState;
 }
 
 const Dashboard: React.FC<DashboardProps> = ({ data }) => {
@@ -22,7 +19,7 @@ const Dashboard: React.FC<DashboardProps> = ({ data }) => {
     const totalAnimals = activeAnimals.length;
     const totalCost = data.costs.reduce((acc, curr) => acc + curr.amount, 0);
     const avgCostPerAnimal = totalAnimals > 0 ? totalCost / totalAnimals : 0;
-    
+
     // Agregação explícita separando Insumo de Medicamento
     const initialAcc = {
       [CostType.INPUT]: 0,
@@ -75,10 +72,10 @@ const Dashboard: React.FC<DashboardProps> = ({ data }) => {
               <BarChart data={stats.chartData} layout="vertical" margin={{ left: 20 }}>
                 <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="#f3f4f6" />
                 <XAxis type="number" hide />
-                <YAxis dataKey="name" type="category" width={140} axisLine={false} tickLine={false} tick={{fill: '#4b5563', fontSize: 11, fontWeight: 'bold'}} />
-                <Tooltip 
-                  cursor={{fill: '#f9fafb'}} 
-                  contentStyle={{borderRadius: '16px', border: 'none', boxShadow: '0 10px 15px -3px rgb(0 0 0 / 0.1)'}} 
+                <YAxis dataKey="name" type="category" width={140} axisLine={false} tickLine={false} tick={{ fill: '#4b5563', fontSize: 11, fontWeight: 'bold' }} />
+                <Tooltip
+                  cursor={{ fill: '#f9fafb' }}
+                  contentStyle={{ borderRadius: '16px', border: 'none', boxShadow: '0 10px 15px -3px rgb(0 0 0 / 0.1)' }}
                   formatter={(value: number) => [`R$ ${value.toLocaleString()}`, 'Valor']}
                 />
                 <Bar dataKey="value" radius={[0, 12, 12, 0]} barSize={40}>
@@ -100,7 +97,7 @@ const Dashboard: React.FC<DashboardProps> = ({ data }) => {
   );
 };
 
-const StatCard: React.FC<{title: string, value: string, icon: React.ReactNode, color: string, description: string}> = ({ title, value, icon, color, description }) => (
+const StatCard: React.FC<{ title: string, value: string, icon: React.ReactNode, color: string, description: string }> = ({ title, value, icon, color, description }) => (
   <div className="bg-white p-7 rounded-[2.5rem] shadow-sm border border-gray-100 group transition-all duration-300">
     <div className={`${color} p-4 rounded-2xl w-fit mb-5 shadow-sm`}>{icon}</div>
     <p className="text-gray-400 text-xs font-black uppercase tracking-widest mb-1">{title}</p>

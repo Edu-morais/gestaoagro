@@ -1,22 +1,22 @@
 
 import React, { useMemo, useState, useEffect } from 'react';
-import { 
-  Calculator, 
-  Download, 
-  X, 
-  FileText, 
-  Beef, 
-  TrendingUp, 
+import {
+  Calculator,
+  Download,
+  X,
+  FileText,
+  Beef,
+  TrendingUp,
   ClipboardList,
   Filter,
   FileSearch,
   DollarSign,
   Printer
 } from 'lucide-react';
-import { Animal, CostEntry, CostType, Category } from '../types';
+import { Animal, CostEntry, CostType, Category, AppState } from '../types';
 
 interface ReportsProps {
-  data: { animals: Animal[]; costs: CostEntry[] };
+  data: AppState;
 }
 
 type DatePreset = 'today' | 'week' | 'month' | 'year' | 'custom';
@@ -55,23 +55,23 @@ const Reports: React.FC<ReportsProps> = ({ data }) => {
 
     const activeAnimals = data.animals.filter(a => a.status === 'ACTIVE');
     const soldInPeriod = data.animals.filter(a => a.status === 'SOLD' && a.saleDate && new Date(a.saleDate) >= start && new Date(a.saleDate) <= end);
-    
+
     const directCosts = periodCosts.filter(c => c.animalId || c.batchId).reduce((a, b) => a + b.amount, 0);
     const fixedCosts = periodCosts.filter(c => !c.animalId && !c.batchId).reduce((a, b) => a + b.amount, 0);
     const totalRevenue = soldInPeriod.reduce((a, b) => a + (b.salePrice || 0), 0);
     const totalInvested = directCosts + fixedCosts;
     const avgCostPerHead = activeAnimals.length > 0 ? totalInvested / activeAnimals.length : 0;
-    
+
     const costsByCategory = Object.values(CostType).map(type => ({
       type,
       amount: periodCosts.filter(c => c.type === type).reduce((sum, c) => sum + c.amount, 0)
     }));
 
-    return { 
-      avgCostHead: avgCostPerHead, 
-      totalAnimals: activeAnimals.length, 
+    return {
+      avgCostHead: avgCostPerHead,
+      totalAnimals: activeAnimals.length,
       soldInPeriod: soldInPeriod.length,
-      directCosts, 
+      directCosts,
       fixedCosts,
       totalInvested,
       totalRevenue,
@@ -90,9 +90,9 @@ const Reports: React.FC<ReportsProps> = ({ data }) => {
           </h2>
           <p className="text-gray-500 font-medium">Análise financeira por período.</p>
         </div>
-        
+
         <div className="flex flex-wrap items-end gap-4">
-          <select 
+          <select
             className="bg-gray-50 border-none rounded-xl px-4 py-2 font-bold"
             value={datePreset}
             onChange={(e) => setDatePreset(e.target.value as DatePreset)}
@@ -104,8 +104,8 @@ const Reports: React.FC<ReportsProps> = ({ data }) => {
             <option value="custom">Custom</option>
           </select>
 
-          <button 
-            onClick={() => setIsPreviewModalOpen(true)} 
+          <button
+            onClick={() => setIsPreviewModalOpen(true)}
             className="px-6 py-2.5 bg-emerald-600 text-white font-black rounded-xl hover:bg-emerald-700 transition-all flex items-center gap-2"
           >
             <Download size={18} /> Ver Relatório
@@ -116,9 +116,9 @@ const Reports: React.FC<ReportsProps> = ({ data }) => {
       <div className="grid grid-cols-1 xl:grid-cols-3 gap-8">
         <div className="xl:col-span-2 space-y-8">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <ReportCard title="Custo Total" value={`R$ ${reportData.totalInvested.toLocaleString()}`} icon={<TrendingUp className="text-orange-600"/>} color="bg-orange-50" />
-            <ReportCard title="Receita Vendas" value={`R$ ${reportData.totalRevenue.toLocaleString()}`} icon={<DollarSign className="text-emerald-600"/>} color="bg-emerald-50" />
-            <ReportCard title="Custo Médio/Cab." value={`R$ ${reportData.avgCostHead.toLocaleString()}`} icon={<Calculator className="text-blue-600"/>} color="bg-blue-50" />
+            <ReportCard title="Custo Total" value={`R$ ${reportData.totalInvested.toLocaleString()}`} icon={<TrendingUp className="text-orange-600" />} color="bg-orange-50" />
+            <ReportCard title="Receita Vendas" value={`R$ ${reportData.totalRevenue.toLocaleString()}`} icon={<DollarSign className="text-emerald-600" />} color="bg-emerald-50" />
+            <ReportCard title="Custo Médio/Cab." value={`R$ ${reportData.avgCostHead.toLocaleString()}`} icon={<Calculator className="text-blue-600" />} color="bg-blue-50" />
           </div>
 
           <div className="bg-white p-8 rounded-3xl border border-gray-100 shadow-sm">
@@ -162,7 +162,7 @@ const Reports: React.FC<ReportsProps> = ({ data }) => {
               <span className="font-bold text-gray-500 text-sm">Documento Oficial de Prestação de Contas</span>
               <div className="flex gap-2">
                 <button onClick={handlePrint} className="px-5 py-2.5 bg-emerald-600 text-white rounded-xl text-sm font-black flex items-center gap-2">
-                   <Printer size={16}/> Imprimir PDF
+                  <Printer size={16} /> Imprimir PDF
                 </button>
                 <button onClick={() => setIsPreviewModalOpen(false)} className="p-2 hover:bg-gray-200 rounded-full">
                   <X size={20} />
@@ -174,9 +174,9 @@ const Reports: React.FC<ReportsProps> = ({ data }) => {
               <div className="bg-white w-full max-w-[210mm] shadow-xl p-16 font-sans print:shadow-none print:p-0">
                 <div className="flex items-center gap-2 text-emerald-800 mb-12 border-b pb-8">
                   <Beef size={40} />
-                  <span className="text-3xl font-black tracking-tighter">BovinoFinance</span>
+                  <span className="text-3xl font-black tracking-tighter">AgroSistem</span>
                 </div>
-                
+
                 <h1 className="text-4xl font-black mb-4">Relatório de Gestão</h1>
                 <p className="text-gray-500 mb-12">Período: {new Date(startDate).toLocaleDateString()} — {new Date(endDate).toLocaleDateString()}</p>
 
@@ -211,7 +211,7 @@ const Reports: React.FC<ReportsProps> = ({ data }) => {
   );
 };
 
-const ReportCard = ({ title, value, icon, color }: any) => (
+const ReportCard = ({ title, value, icon, color }: { title: string, value: string, icon: React.ReactNode, color: string }) => (
   <div className="bg-white p-6 rounded-3xl border border-gray-100 shadow-sm flex items-center gap-4 transition-all">
     <div className={`w-14 h-14 ${color} rounded-2xl flex items-center justify-center`}>{icon}</div>
     <div>
@@ -221,7 +221,7 @@ const ReportCard = ({ title, value, icon, color }: any) => (
   </div>
 );
 
-const DRELine = ({ label, value, isNegative }: any) => (
+const DRELine = ({ label, value, isNegative }: { label: string, value: number, isNegative?: boolean }) => (
   <div className="flex justify-between py-2 border-b border-gray-50 last:border-0">
     <span className="text-gray-500 font-bold text-sm">{label}</span>
     <span className={`font-black ${isNegative ? 'text-red-500' : 'text-gray-900'}`}>R$ {Math.abs(value).toLocaleString()}</span>
