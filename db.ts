@@ -26,18 +26,41 @@ const INITIAL_DATA: AppData = {
   inventory: []
 };
 
-export const loadData = (): AppData => {
-  const stored = localStorage.getItem(STORAGE_KEY);
-  if (!stored) return INITIAL_DATA;
-  try {
-    const parsed = JSON.parse(stored);
-    // Garantir que se a lista de custos estiver vazia, ela continue vazia
-    return parsed;
-  } catch {
+// Helper to check if running in Electron
+const isElectron = () => {
+  return typeof window !== 'undefined' && window.ipcRenderer;
+};
+
+export const loadData = async (): Promise<AppData> => {
+  if (isElectron()) {
+    try {
+      const data = await window.ipcRenderer.invoke('get-data');
+      if (data) return data;
+    } catch (error) {
+      console.error('Failed to load data from Electron:', error);
+    }
     return INITIAL_DATA;
+  } else {
+    // Web Mode
+    const stored = localStorage.getItem(STORAGE_KEY);
+    if (!stored) return INITIAL_DATA;
+    try {
+      return JSON.parse(stored);
+    } catch {
+      return INITIAL_DATA;
+    }
   }
 };
 
-export const saveData = (data: AppData) => {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+export const saveData = async (data: AppData) => {
+  if (isElectron()) {
+    try {
+      await window.ipcRenderer.invoke('save-data', data);
+    } catch (error) {
+      console.error('Failed to save data to Electron:', error);
+    }
+  } else {
+    // Web Mode
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+  }
 };

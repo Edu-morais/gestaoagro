@@ -1,12 +1,12 @@
 
 import React, { useState, useEffect } from 'react';
-import { 
-  LayoutDashboard, 
-  Beef, 
-  DollarSign, 
-  Package, 
-  BarChart3, 
-  Menu, 
+import {
+  LayoutDashboard,
+  Beef,
+  DollarSign,
+  Package,
+  BarChart3,
+  Menu,
   X,
   History
 } from 'lucide-react';
@@ -17,17 +17,39 @@ import Costs from './pages/Costs';
 import Inventory from './pages/Inventory';
 import Reports from './pages/Reports';
 import SoldAnimals from './pages/SoldAnimals';
+import DownloadModal from './components/DownloadModal';
+import UpdateModal from './components/UpdateModal';
 
 const App: React.FC = () => {
-  const [data, setData] = useState(loadData());
+  const [data, setData] = useState<any>(null); // Initial null to wait for load
+  const [isLoading, setIsLoading] = useState(true);
   const [activeTab, setActiveTab] = useState('dashboard');
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   useEffect(() => {
-    saveData(data);
+    const initData = async () => {
+      const loaded = await loadData();
+      setData(loaded);
+      setIsLoading(false);
+    };
+    initData();
+  }, []);
+
+  useEffect(() => {
+    if (data) {
+      saveData(data); // Will be async safe (fire and forget for now, or handle promise if critical)
+    }
   }, [data]);
 
   const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen);
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-emerald-50">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-emerald-700"></div>
+      </div>
+    );
+  }
 
   const navigation = [
     { id: 'dashboard', name: 'Dashboard', icon: LayoutDashboard },
@@ -74,8 +96,8 @@ const App: React.FC = () => {
                 }}
                 className={`
                   w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all
-                  ${activeTab === item.id 
-                    ? 'bg-emerald-700 text-white shadow-lg shadow-emerald-950/20' 
+                  ${activeTab === item.id
+                    ? 'bg-emerald-700 text-white shadow-lg shadow-emerald-950/20'
                     : 'text-emerald-100 hover:bg-emerald-800/50'
                   }
                 `}
@@ -99,6 +121,9 @@ const App: React.FC = () => {
           {activeTab === 'reports' && <Reports data={data} />}
         </div>
       </main>
+
+      <DownloadModal />
+      <UpdateModal />
     </div>
   );
 };
