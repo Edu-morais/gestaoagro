@@ -39,12 +39,10 @@ const DownloadModal: React.FC = () => {
                     </p>
                     <div className="flex gap-2">
                         <a
-                            href="https://github.com/tomate-adm/gestaoagro/releases/latest"
-                            target="_blank"
-                            rel="noopener noreferrer"
+                            href="https://github.com/tomate-adm/gestaoagro/releases/latest/download/BovinoFinance-Setup-1.0.0.exe"
                             className="bg-emerald-600 hover:bg-emerald-700 text-white px-3 py-1.5 rounded text-sm font-medium transition-colors"
                         >
-                            Baixar Agora
+                            Baixar Instalador (.exe)
                         </a>
                         <button
                             onClick={handleDismiss}
