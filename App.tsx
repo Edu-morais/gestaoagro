@@ -17,8 +17,8 @@ import Costs from './pages/Costs';
 import Inventory from './pages/Inventory';
 import Reports from './pages/Reports';
 import SoldAnimals from './pages/SoldAnimals';
-import DownloadModal from './src/components/DownloadModal';
-import UpdateModal from './src/components/UpdateModal';
+import InstallPwaModal from './src/components/InstallPwaModal';
+import ReloadPrompt from './src/components/ReloadPrompt';
 
 const App: React.FC = () => {
   const [data, setData] = useState<any>(null); // Initial null to wait for load
@@ -122,8 +122,8 @@ const App: React.FC = () => {
         </div>
       </main>
 
-      <DownloadModal />
-      <UpdateModal />
+      <InstallPwaModal />
+      <ReloadPrompt />
     </div>
   );
 };
