@@ -91,7 +91,7 @@ const Animals: React.FC<AnimalsProps> = ({ data, setData }) => {
       <div className="flex justify-between items-center">
         <div>
           <h2 className="text-2xl font-bold text-gray-900 flex items-center gap-3">
-            <img src="/logo.png" alt="Icon" className="w-16 h-16 object-contain drop-shadow-sm" />
+            <Layers className="w-16 h-16 text-emerald-800" strokeWidth={1.5} />
             Gestão de Rebanho
           </h2>
           <p className="text-gray-500">Controle completo do plantel ativo.</p>
