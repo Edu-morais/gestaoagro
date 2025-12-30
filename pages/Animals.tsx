@@ -114,7 +114,6 @@ const Animals: React.FC<AnimalsProps> = ({ data, setData }) => {
               <tr>
                 <th className="px-6 py-4">Brinco / ID</th>
                 <th className="px-6 py-4">Categoria</th>
-                <th className="px-6 py-4">Lote</th>
                 <th className="px-6 py-4">Peso Entrada</th>
               </tr>
             </thead>
@@ -128,7 +127,6 @@ const Animals: React.FC<AnimalsProps> = ({ data, setData }) => {
                       <div className="text-[10px] text-gray-400 font-mono">ID: {animal.id.slice(0, 6)}</div>
                     </td>
                     <td className="px-6 py-4"><span className={`px-3 py-1 rounded-full text-[10px] font-bold uppercase ${animal.category === Category.CRIA ? 'bg-amber-100 text-amber-700' : 'bg-emerald-100 text-emerald-700'}`}>{animal.category}</span></td>
-                    <td className="px-6 py-4 text-gray-600 font-medium">{batch?.name || '---'}</td>
                     <td className="px-6 py-4 font-bold text-gray-900">{animal.weightAtEntry ? `${animal.weightAtEntry} kg` : '---'}</td>
                   </tr>
                 );

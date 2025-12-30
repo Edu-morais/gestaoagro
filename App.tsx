@@ -101,8 +101,8 @@ function App() {
       `}>
         <div className="p-4 flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <div className="bg-white p-2 rounded-lg">
-              <img src="/logo.png" alt="AgroSistem Logo" className="w-12 h-12 object-contain" />
+            <div className="bg-white rounded-lg overflow-hidden">
+              <img src="/logo.png" alt="AgroSistem Logo" className="w-16 h-16 object-contain" />
             </div>
             <span className="font-bold text-xl tracking-tight">AgroSistem</span>
           </div>
